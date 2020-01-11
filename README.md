@@ -1,6 +1,5 @@
-<p align="center">
 # SOLIDITY SMART CONTRACT TESTING BASE FILE TEMPLATE
-</p>
+
 ## Steps for Testing
 
 Step 1 :
