@@ -49,7 +49,7 @@ Step 8 :
 `npm run test` this will compile and run your tests.
 
 ## Steps to deploy contract
-- You can test deployment on testnets like `rinkeby` or `kovan`. For deployment on mainnet use `homestead`, the process would be same as testnet, but deployment time might vary on different networks due to crowdedness.
+- You can test deployment on testnets like `rinkeby` or `kovan`. For deployment on mainnet use `homestead`, the process would be same as testnet, the deployment time might vary on different networks.
 
 - To deploy all compiled contracts, do `node deploy.js deployall rinkeby 0xa6779f54dc1e9959b81f448769450b97a9fcb2b41c53d4b2ab50e5055a170ce7`.
 
