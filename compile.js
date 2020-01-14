@@ -1,3 +1,7 @@
+/*
+    Author: Soham Zemse (https://github.com/zemse)
+*/
+
 const path = require('path');
 const fs = require('fs-extra');
 const solc = require('solc');
