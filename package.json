@@ -8,16 +8,16 @@
     "test": "node compile.js && mocha --timeout 30000"
   },
   "author": {
-    "name": "Jetso Analin",
-    "email": "jetyjetso@gmail.com",
-    "url": "https://www.linkedin.com/in/jetsoanalin/"
+    "name": "Milind DHolakia",
+    "email": "milinddholakia0@gmail.com",
+    "url": "https://www.linkedin.com/in/milind-dholakia/"
   },
   "license": "MIT",
   "dependencies": {
-    "ganache-cli": "6.8.1",
-    "mocha": "^7.0.0",
-    "solc": "^0.5.10",
     "ethers": "^4.0.41",
-    "fs-extra": "8.1.0"
+    "fs-extra": "8.1.0",
+    "ganache-cli": "^6.12.2",
+    "mocha": "^7.0.0",
+    "solc": "^0.5.10"
   }
 }

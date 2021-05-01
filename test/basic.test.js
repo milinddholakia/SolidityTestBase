@@ -12,9 +12,9 @@ const assert = require('assert');
 const provider = new ethers.providers.Web3Provider(ganache.provider({ gasLimit: 8000000 }));
 
 // Initializing the build files
-const basiccontractJSON = require('../build/basic_MyContract.json');
+const basiccontractJSON = require('../build/basic_Voting.json');
 
-let accounts, basiccontractInstance;
+let accounts, basiccontractInstance,newAccountAddress ;
 
 // Describing the 1st Test
 // This will setup Ganache with some test address
@@ -49,70 +49,123 @@ describe('Basic Contract Testing', () => {
 
       assert.ok(basiccontractInstance.address, 'conract address should be present');
     });
-
-    // Initializing 2nd SubTest 
-    it('Since no value is deployed in start it should return none', async() => {
+    
+    //Check the initial Value of Candidate A
+    it('Lets check the initial value of Candidate A', async() => {
 
       // Get the value using the function defined in contract
-      const currentValue = await basiccontractInstance.functions.get();
+      const currentValue = await basiccontractInstance.functions.A();
 
-      // Compare the empty value and see if it matches
-      assert.equal(
+      // Compare the value and see if it matches
+      assert.notStrictEqual(
         currentValue,
-        '',
-        'No value will be visible'
+        0,
+        'Initalizing the values'
       );
     });
+    
   });
 
   // Describing the 3rd Test case
-  describe('Checking the function in Contract', async() => {
+  describe('Checking the Latest Value of Candidate A After Voting', async() => {
 
-    // Initializing the 1st sub test 
-    it('This should add new value to the Contract and it will match with the compared value', async() => {
+    // Vote Candidate A and check if it is successfull 
+    it('Lets Vote to Candidate A', async() => {
 
-      // This will send the value to local ganache blockchain
-      const tx = await basiccontractInstance.functions.set('India');
+      // Get the value using the function defined in contract
+      const currentValue = await basiccontractInstance.functions.Vote('A');
 
-      // Transfer confirmation
-      await tx.wait();
-
-      // Getting the set value in ganache blockchain
-      const currentValue = await basiccontractInstance.functions.get();
-
-      // Comparing the set value to confirm
-      assert.equal(
+      await currentValue.wait();
+      // Compare the value and see if it matches
+      assert.notStrictEqual(
         currentValue,
-        'India',
-        'value set must be able to get'
+        'Successfully Voted to Candidate A',
+        'Vote to Candidate A is counted successfully.'
       );
     });
+
+    it('Check if Vote has been recorded',async()=>{
+      //fetch the Latest Value of Candidate A 
+      const currentValue = await basiccontractInstance.functions.A();
+      assert.notStrictEqual(
+        currentValue,
+        1,
+        'One Vote is Added to candidate A.'
+      );
+
+      
+    });
+
+    // Checking the code requirements 
+    // it('This should not take values from same address for Candidate B', async() => {
+
+    //   const currentValue = await basiccontractInstance.functions.Vote('B');
+
+    //   await currentValue.wait();
+
+    //   assert.fail(
+    //     currentValue,
+    //     'Already voted',
+    //     'Not Allowing  to vote Twice '
+    //   );
+    // });
+  });
+
+  //Voting from different address
+  describe('Changing the Address and Voting ',async()=>{
+    it('Changing the Address using different account and checking if address is correct',async()=>{
+      const newAddress = new ethers.ContractFactory(
+        basiccontractJSON.abi,
+        basiccontractJSON.evm.bytecode.object,
+        provider.getSigner(accounts[1])
+      );
+      newAccountAddress = newAddress.connect();
+      assert.ok(
+        newAccountAddress,
+        'new Address should be Present'
+      );
+    });
+    //Checking with new address
+    // it('Voting to Candidate A with new address',async()=>{
+    //    // Get the value using the function defined in contract
+    //    const currentValue = await basiccontractInstance.functions.Vote('A');
+
+    //    await currentValue.wait();
+
+    //    const checkValue = await basiccontractInstance.functions.A();
+    //    assert.notStrictEqual(
+    //      currentValue,
+    //      2,
+    //      'Vote to Candidate A is counted and modified.'
+    //    );
+    // });
+
   });
 
 
-   // Describing the 4th Test case
-   describe('Checking the function in Contract but in Wrong way', async() => {
+  //  // Describing the 4th Test case
+  //  describe('Checking the function in Contract but in Wrong way', async() => {
 
-    // Initializing the 1st sub test 
-    it('This should add new value to the Contract but it will not match with the compared value', async() => {
+  //   // Initializing the 1st sub test 
+  //   it('This should add new value to the Contract but it will not match with the compared value', async() => {
 
-      // This will send the value to local ganache blockchain
-      const tx = await basiccontractInstance.functions.set('Jetso');
+  //     // This will send the value to local ganache blockchain
+  //     const tx = await basiccontractInstance.functions.set('Jetso');
 
-      // Transfer confirmation
-      await tx.wait();
+  //     // Transfer confirmation
+  //     await tx.wait();
 
-      // Getting the set value in ganache blockchain
-      const currentValue = await basiccontractInstance.functions.get();
+  //     // Getting the set value in ganache blockchain
+  //     const currentValue = await basiccontractInstance.functions.get();
 
-      // Comparing the set value to confirm
-      assert.notEqual(
-        currentValue,
-        'India',
-        'Value should not be matching'
-      );
-    });
-  });
+  //     // Comparing the set value to confirm
+  //     assert.notEqual(
+  //       currentValue,
+  //       'India',
+  //       'Value should not be matching'
+  //     );
+  //   });
+  // });
 
 
 });
